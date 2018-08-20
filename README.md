@@ -236,5 +236,32 @@ You can change between the *SLAM* and *Localization mode* using the GUI of the m
 This is the default mode. The system runs in parallal three threads: Tracking, Local Mapping and Loop Closing. The system localizes the camera, builds new map and tries to close loops.
 
 ### Localization Mode
-This mode can be used when you have a good map of your working area. In this mode the Local Mapping and Loop Closing are deactivated. The system localizes the camera in the map (which is no longer updated), using relocalization if needed. 
+This mode can be used when you have a good map of your working area. In this mode the Local Mapping and Loop Closing are deactivated. The system localizes the camera in the map (which is no longer updated), using relocalization if needed.
 
+# 10. Notes
+### Solution for ROS compiling error
+Locate libboost_system.so and libboost_filesystem.so libraries into the user directory.
+```
+locate boost_system
+```
+i.e /usr/lib/x86_64-linux-gnu/libboost_system.so
+```
+locate boost_fylesystem
+```
+i.e /usr/lib/x86_64-linux-gnu/libboost_filesystem.so
+
+create link files to the libraries and copy them into the the ORB_SLAM2/lib directory
+
+Edit the ROS CMake file to add the libraries
+```
+set(LIBS 
+${OpenCV_LIBS} 
+${EIGEN3_LIBS}
+${Pangolin_LIBRARIES}
+${PROJECT_SOURCE_DIR}/../../../Thirdparty/DBoW2/lib/libDBoW2.so
+${PROJECT_SOURCE_DIR}/../../../Thirdparty/g2o/lib/libg2o.so
+${PROJECT_SOURCE_DIR}/../../../lib/libORB_SLAM2.so
+${PROJECT_SOURCE_DIR}/../../../lib/libboost_filesystem.so <----
+${PROJECT_SOURCE_DIR}/../../../lib/libboost_system.so <-----
+)
+```
